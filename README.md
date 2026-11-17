@@ -189,29 +189,38 @@ The system follows a combination of RTC-based scheduling and environmental illum
 
 ```text
 Adaptive-Street-Light-Control-LPC2148/
+
+Adaptive-Street-Light-Control-LPC2148/
 │
-├── README.md
+├── ADC/
+│   └── ADC driver source and header files
 │
-├── Images/
+├── DELAY/
+│   └── Delay driver source and header files
+│
+├── EXTERNAL_INTERRUPT/
+│   └── External interrupt source and header files
+│
+├── IMAGES/
 │   ├── project_setup.jpg
 │   ├── block_diagram.png
 │   ├── circuit_diagram.png
 │   └── lcd_output.jpg
 │
-├── Source_Code/
-│   ├── main.c
-│   ├── rtc.c
-│   ├── rtc.h
-│   ├── adc.c
-│   ├── adc.h
-│   ├── lcd.c
-│   ├── lcd.h
-│   ├── keypad.c
-│   ├── keypad.h
-│   └── Other source files
+├── KEYPAD/
+│   └── Keypad driver source and header files
 │
-└── Documentation/
-    └── Project_Report.pdf
+├── LCD/
+│   └── LCD driver source and header files
+│
+├── LDR_FILES/
+│   └── LDR sensor source and header files
+│
+├── RTCFILES/
+│   └── RTC source and header files
+│
+└── README.md
+
 ```
 
 ## 📸 Project Demonstration
