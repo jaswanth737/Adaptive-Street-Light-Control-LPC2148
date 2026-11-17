@@ -1,0 +1,4 @@
+#define EINT0_PIN_0_1 0
+#define EINT0_PIN_FUNC 0x0000000C
+#define EINT0_VIC_CHN0 14
+#define EINT0_STATUS_LED 16 //p1.16
