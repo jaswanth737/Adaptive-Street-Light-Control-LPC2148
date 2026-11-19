@@ -1,111 +1,131 @@
 # 🌃 Adaptive Street Light Control Using RTC & LDR
 
-\<p align="center">
-&#x20; \<img src="IMAGES/project_banner.png" width="850" alt="Adaptive Street Light Control">
-\</p>
+### Intelligent Streetlight Automation Using LPC2148 ARM7 Microcontroller
 
-\<h3 align="center">Intelligent Streetlight Automation Using LPC2148 ARM7 Microcontroller\</h3>
+![LPC2148 Project](IMAGES/hardware_setup.jpg)
 
-\<p align="center">
-&#x20; \<img src="[https://img.shields.io/badge/Microcontroller-LPC2148-blue](https://img.shields.io/badge/Microcontroller-LPC2148-blue)">
-&#x20; \<img src="[https://img.shields.io/badge/Architecture-ARM7-orange](https://img.shields.io/badge/Architecture-ARM7-orange)">
-&#x20; \<img src="[https://img.shields.io/badge/Language-Embedded%20C-green](https://img.shields.io/badge/Language-Embedded%20C-green)">
-&#x20; \<img src="[https://img.shields.io/badge/IDE-Keil%20µVision-purple](https://img.shields.io/badge/IDE-Keil%20µVision-purple)">
-&#x20; \<img src="[https://img.shields.io/badge/ADC-10--Bit-yellow](https://img.shields.io/badge/ADC-10--Bit-yellow)">
-&#x20; \<img src="[https://img.shields.io/badge/RTC-Internal%20RTC-red](https://img.shields.io/badge/RTC-Internal%20RTC-red)">
-\</p>
+<p align="center">
+
+**LPC2148 | ARM7 | Embedded C | Keil µVision | RTC | ADC**
+
+</p>
 
 ---
 
 ## 📌 Project Overview
 
-**Adaptive Street Light Control Using RTC and Environmental Illumination** is an embedded systems project developed using the LPC2148 ARM7 microcontroller.
+Adaptive Street Light Control is an embedded systems project developed using the **LPC2148 ARM7 microcontroller**.
 
-The system automatically controls streetlights based on two important conditions:
+The system automatically controls streetlights based on two important parameters:
 
-- 🕒 **Time-Based Control:** Uses the internal RTC to determine whether the current time is within the user-configured starting and ending boundaries.
+- 🕒 **Time-Based Control:** Uses the internal Real-Time Clock (RTC) to check whether the current time is within the configured starting and ending time boundaries.
 - 🌤️ **Light-Based Control:** Uses an LDR sensor and the internal 10-bit ADC to measure surrounding illumination.
 
-A 4×4 keypad provides user interaction through a menu-based configuration system. An external interrupt connected to P0.1 allows the user to enter editing mode.
+A 4×4 keypad allows users to configure RTC parameters and streetlight operating boundaries. An external interrupt connected to GPIO pin P0.1 activates the configuration menu.
 
-The current time, date, LDR ADC value, and streetlight status are displayed on a 16×2 LCD.
+A 16×2 LCD displays the current time, date, LDR ADC reading, and streetlight ON/OFF status.
 
 ### 💡 How Does It Work?
 
-\<p align="center">
-&#x20; \<img src="IMAGES/project_setup.jpg" width="650" alt="Project Hardware Setup">
-\</p>
+The streetlight turns ON only when:
 
-The streetlight turns ON only when **both the configured time condition and low-illumination condition are satisfied**.
+1. The current RTC time is within the configured operating boundaries.
+2. The surrounding illumination is below the predefined threshold.
+
+If either condition is not satisfied, the streetlight remains OFF.
 
 ---
 
 ## 🎯 Project Objectives
 
-- Implement RTC-based automatic streetlight scheduling.
-- Monitor surrounding illumination using an LDR sensor.
-- Convert analog sensor voltage into a digital value using the 10-bit ADC.
-- Configure RTC date and time through a 4×4 keypad.
+- Implement automatic streetlight control using the LPC2148 internal RTC.
+- Monitor environmental illumination using an LDR sensor.
+- Convert analog sensor voltage into digital values using the 10-bit ADC.
+- Configure RTC date and time through a keypad.
 - Configure starting and ending time boundaries.
-- Implement external interrupt-based menu activation.
+- Implement external interrupt-driven menu activation.
 - Display real-time information using a 16×2 LCD.
-- Reduce unnecessary electricity consumption through adaptive lighting control.
+- Reduce unnecessary energy consumption through adaptive lighting control.
 
 ---
 
 ## 🧠 System Block Diagram
 
-The following diagram explains how all the hardware modules communicate with the LPC2148 microcontroller.
+The following block diagram explains the overall hardware architecture and communication between the different peripherals.
+
+![Adaptive Street Light System Block Diagram](IMAGES/system_block_diagram.png)
+
+### System Components
+
+| Component | Function |
+|---|---|
+| LPC2148 | Main ARM7 microcontroller |
+| Internal RTC | Maintains current time and date |
+| 32.768 kHz Crystal | RTC clock source |
+| LDR Sensor | Detects surrounding illumination |
+| 10-bit ADC | Converts analog voltage into digital values |
+| 4×4 Keypad | User input and menu navigation |
+| External Interrupt | Activates configuration mode |
+| 16×2 LCD | Displays system information |
+| LED | Represents the streetlight |
+
+---
+
+## 🔄 Working Principle
+
+The system follows RTC-based scheduling combined with environmental illumination detection.
+
+### Automatic Streetlight Control Flowchart
 
 ```mermaid
-flowchart TB
-    A["🌤️ LDR Sensor"] --> B["10-Bit ADC"]
-    C["🕒 32.768 kHz Crystal"] --> D["Internal RTC"]
-    E["4×4 Keypad"] --> F["GPIO Interface"]
-    G["External Interrupt Button<br/>P0.1"] --> H["External Interrupt"]
+flowchart TD
+    A([Power ON]) --> B[Initialize LPC2148]
+    B --> C[Initialize RTC, ADC, LCD, Keypad and GPIO]
+    C --> D[Read Current RTC Time]
+    D --> E[Read LDR ADC Value]
+    E --> F{Within Configured Time Boundaries?}
 
-    B --> I["LPC2148 ARM7<br/>Microcontroller"]
-    D --> I
-    F --> I
-    H --> I
+    F -- No --> G[Streetlight OFF]
+    F -- Yes --> H{Low Illumination Detected?}
 
-    I --> J["16×2 LCD Display"]
-    I --> K["LED Streetlight"]
-    
-    L["RTC Backup Supply"] --> D
+    H -- No --> G
+    H -- Yes --> I[Streetlight ON]
 
-    style I fill:#164e83,color:#fff,stroke:#0f172a
-    style K fill:#15803d,color:#fff
-    style J fill:#7c3aed,color:#fff
+    G --> J[Update LCD]
+    I --> J
+
+    J --> K{External Interrupt Activated?}
+
+    K -- Yes --> L[Enter Configuration Menu]
+    L --> M[Edit RTC or Time Boundaries]
+    M --> D
+
+    K -- No --> D
 ```
 
-### System Operation
+### Streetlight Decision Table
 
-| Input / Module     | Function                                            |
-| ------------------ | --------------------------------------------------- |
-| LDR Sensor         | Detects surrounding light intensity                 |
-| ADC                | Converts analog voltage into a 10-bit digital value |
-| Internal RTC       | Maintains current time and date                     |
-| 4×4 Keypad         | Provides menu navigation and configuration          |
-| External Interrupt | Activates the editing menu                          |
-| 16×2 LCD           | Displays time, date, ADC value, and LED status      |
-| LED                | Represents the streetlight                          |
+| Time Condition | Light Condition | Streetlight |
+|---|---|---|
+| Outside configured time | Any condition | OFF |
+| Within configured time | Sufficient illumination | OFF |
+| Within configured time | Low illumination | ON |
 
 ---
 
 ## ⚙️ Hardware Requirements
 
-| Component           | Description                   |
-| ------------------- | ----------------------------- |
-| LPC2148             | ARM7 microcontroller          |
-| 16×2 LCD            | Parallel interface display    |
-| 4×4 Keypad          | User input                    |
-| LDR Sensor          | Light intensity detection     |
-| 5 kΩ Resistor       | LDR voltage divider           |
-| LED                 | Streetlight representation    |
-| 32.768 kHz Crystal  | RTC clock source              |
-| 3.3 V Backup Supply | RTC backup power              |
-| Push Button         | External interrupt activation |
+| Component | Description |
+|---|---|
+| LPC2148 | ARM7 microcontroller |
+| 16×2 LCD | Parallel interface LCD display |
+| 4×4 Keypad | User input |
+| LDR Sensor | Environmental illumination detection |
+| 5 kΩ Fixed Resistor | LDR voltage divider |
+| LED | Streetlight representation |
+| 32.768 kHz Crystal | RTC clock source |
+| 3.3 V Backup Supply | RTC backup power |
+| Push Button | External interrupt activation |
 
 ## 💻 Software Requirements
 
@@ -120,43 +140,39 @@ flowchart TB
 
 ### 1. LPC2148 Microcontroller
 
-The LPC2148 is an ARM7TDMI-S based 32-bit microcontroller from NXP.
+The LPC2148 is a 32-bit ARM7TDMI-S based microcontroller from NXP.
 
-It provides the internal peripherals required for this project, including:
+The following internal peripherals are used in this project:
 
 - Real-Time Clock (RTC)
-- 10-bit ADC
-- GPIO
+- 10-bit Analog-to-Digital Converter
+- General Purpose Input/Output (GPIO)
 - External Interrupt Controller
-- Timers and UART interfaces
+- Timers
 
 ### 2. LDR Sensor and ADC
 
-\<p align="center">
-&#x20; \<img src="IMAGES/ldr_circuit.png" width="550" alt="LDR Voltage Divider Circuit">
-\</p>
+An LDR (Light Dependent Resistor) changes its resistance depending on the surrounding illumination.
 
-An LDR (Light Dependent Resistor) changes its resistance according to the surrounding illumination.
+The LDR and 5 kΩ fixed resistor form a voltage divider. The resulting analog voltage is connected to the LPC2148 ADC input.
 
-The LDR and 5 kΩ fixed resistor form a voltage divider. The output voltage is connected to the LPC2148 ADC input.
+**ADC Specifications**
 
-**ADC Specifications:**
+| Parameter | Value |
+|---|---|
+| ADC Resolution | 10 bits |
+| Digital Output | 0–1023 |
+| Minimum Value | 0 |
+| Maximum Value | 1023 |
+| Input | Analog voltage |
 
-| Parameter      | Value          |
-| -------------- | -------------- |
-| ADC Resolution | 10 bits        |
-| Digital Output | 0–1023         |
-| Minimum Value  | 0              |
-| Maximum Value  | 1023           |
-| Input          | Analog voltage |
+The ADC reading is compared with a predefined threshold to determine whether the surrounding environment is sufficiently dark.
 
-The measured ADC value is compared with a predefined threshold to determine whether the surrounding environment is sufficiently dark.
-
-*Note: The ADC input channel and physical pin should match the actual development-board wiring.*
+*Note: The comparison direction depends on the actual voltage-divider arrangement.*
 
 ### 3. Internal RTC
 
-The LPC2148 internal RTC maintains the following information:
+The LPC2148 internal RTC maintains the following parameters:
 
 - Seconds
 - Minutes
@@ -178,135 +194,128 @@ When the button is pressed:
 
 1. External interrupt condition is detected.
 2. Interrupt flag is set.
-3. The interrupt condition is cleared.
+3. Interrupt condition is cleared.
 4. An editing flag is updated.
-5. The main program enters the configuration menu.
+5. The main program detects the flag and enters the configuration menu.
 
-The keypad is used for configuration after entering editing mode.
+The keypad is then used for menu navigation and configuration.
 
 ---
 
 ## 🖥️ LCD Display Operation
 
-During normal operation, the 16×2 LCD displays the following information:
+During normal operation, the 16×2 LCD displays:
 
-\<p align="center">
-&#x20; \<img src="IMAGES/lcd_output.jpg" width="550" alt="LCD Output">
-\</p>
+- Current hour, minute and second.
+- Date, month and year.
+- LDR ADC reading.
+- Streetlight ON/OFF status.
 
-| LCD Information | Description                      |
-| --------------- | -------------------------------- |
-| Time            | Current hour, minute, and second |
-| Date            | Current date, month, and year    |
-| ADC Value       | LDR digital reading              |
-| LED Status      | Streetlight ON/OFF indication    |
-
-The display continuously updates the RTC information and environmental illumination reading.
+The LCD continuously updates RTC information and environmental illumination readings.
 
 ---
 
-## 🔔 Configuration Menu
+## 📸 Project Hardware Demonstration
 
-The user can enter editing mode by pressing the external interrupt button.
+### 1. Complete LPC2148 Hardware Setup
 
-### Main Menu
+The following image shows the actual LPC2148 development board with the interfacing connections used in this project.
 
-| Key | Function                        |
-| --- | ------------------------------- |
-| 1   | RTC Edit                        |
-| 2   | Time Boundaries Edit            |
-| 3   | Display Present Time Boundaries |
-| 4   | Exit Editing Mode               |
+![LPC2148 Hardware Setup](IMAGES/hardware_setup.jpg)
+
+### 2. RTC Time Display
+
+![RTC Time Display](IMAGES/rtc_time_display.jpg)
+
+### 3. RTC Editing Menu
+
+![RTC Editing Menu](IMAGES/rtc_editing_menu.jpg)
+
+### 4. RTC Time Editing
+
+![RTC Time Edit Menu](IMAGES/rtc_time_edit_menu.jpg)
+
+### 5. Hour Editing
+
+![Hour Editing](IMAGES/hour_editing.jpg)
+
+### 6. Time Boundaries Display
+
+![Time Boundaries Display](IMAGES/time_boundaries_display.jpg)
+
+### 7. Time Boundaries Editing
+
+![Time Boundaries Editing](IMAGES/time_boundaries_edit_menu.jpg)
+
+### 8. LDR Brightness ADC Reading
+
+![LDR ADC Reading](IMAGES/ldr_adc_reading.jpg)
+
+---
+
+## 🔔 External Interrupt-Driven Configuration
+
+The user can enter editing mode by pressing the external interrupt button connected to P0.1.
+
+### Main Configuration Menu
+
+| Option | Function |
+|---|---|
+| 1 | RTC Edit |
+| 2 | Time Boundaries Edit |
+| 3 | Display Present Time Boundaries |
+| 4 | Exit Editing Mode |
 
 ### 1. RTC Editing Menu
 
-The user can individually modify RTC parameters.
+The RTC editing menu allows individual modification of date and time parameters.
 
 | Option | Parameter |
-| ------ | --------- |
-| 1      | Hour      |
-| 2      | Minute    |
-| 3      | Second    |
-| 4      | Day       |
-| 5      | Date      |
-| 6      | Month     |
-| 7      | Year      |
-| 8      | Exit      |
+|---|---|
+| 1 | Hour |
+| 2 | Minute |
+| 3 | Second |
+| 4 | Day |
+| 5 | Date |
+| 6 | Month |
+| 7 | Year |
+| 8 | Exit |
 
 ### 2. Starting Time Configuration
 
-Configure the time at which streetlight operation is permitted to begin.
+The user can configure the starting time for streetlight operation.
 
-| Option | Parameter             |
-| ------ | --------------------- |
-| 1      | Starting Hour (S_H)   |
-| 2      | Starting Minute (S_M) |
-| 3      | Starting Second (S_S) |
-| 4      | Exit                  |
+| Option | Parameter |
+|---|---|
+| 1 | Starting Hour (S_H) |
+| 2 | Starting Minute (S_M) |
+| 3 | Starting Second (S_S) |
+| 4 | Exit |
 
 ### 3. Ending Time Configuration
 
-Configure the time at which streetlight operation is permitted to end.
+The user can configure the ending time for streetlight operation.
 
-| Option | Parameter           |
-| ------ | ------------------- |
-| 1      | Ending Hour (E_H)   |
-| 2      | Ending Minute (E_M) |
-| 3      | Ending Second (E_S) |
-| 4      | Exit                |
+| Option | Parameter |
+|---|---|
+| 1 | Ending Hour (E_H) |
+| 2 | Ending Minute (E_M) |
+| 3 | Ending Second (E_S) |
+| 4 | Exit |
 
 ### 4. Display Present Time Boundaries
 
-Displays the currently configured starting and ending times on the LCD.
+Displays the currently configured starting and ending time boundaries on the LCD.
 
 ### 5. Exit Editing Mode
 
-Returns the system to normal automatic streetlight operation.
+Exits the configuration menu and returns the system to normal automatic streetlight operation.
 
 ---
 
-## 🔄 Working Principle
-
-The system operates using RTC scheduling and LDR-based illumination detection.
-
-### Automatic Streetlight Control Flowchart
-
-```mermaid
-flowchart TD
-    A([Power ON]) --> B["Initialize LPC2148"]
-    B --> C["Initialize RTC, ADC, LCD,<br/>Keypad and GPIO"]
-    C --> D["Read Current RTC Time"]
-    D --> E["Read LDR ADC Value"]
-    E --> F{"Within Configured<br/>Time Boundaries?"}
-    F -- No --> G["Streetlight OFF"]
-    F -- Yes --> H{"Low Illumination<br/>Detected?"}
-    H -- No --> G
-    H -- Yes --> I["Streetlight ON"]
-    G --> J["Update LCD"]
-    I --> J
-    J --> K{"External Interrupt<br/>Activated?"}
-    K -- Yes --> L["Enter Configuration Menu"]
-    L --> M["Edit RTC / Time Boundaries"]
-    M --> D
-    K -- No --> D
-
-    style A fill:#15803d,color:#fff
-    style I fill:#15803d,color:#fff
-    style G fill:#dc2626,color:#fff
-    style L fill:#164e83,color:#fff
-```
-
-### Streetlight Decision Logic
+## 💡 Streetlight Control Logic
 
 The streetlight is controlled using two conditions:
-
-| Time Condition          | Light Condition         | Streetlight |
-| ----------------------- | ----------------------- | ----------- |
-| Outside configured time | Any condition           | OFF         |
-| Within configured time  | Sufficient illumination | OFF         |
-| Within configured time  | Low illumination        | ON          |
-
-**Control Logic:**
 
 ```c
 if(time_condition)
@@ -326,28 +335,26 @@ else
 }
 ```
 
-*The comparison direction depends on the actual LDR voltage-divider arrangement and ADC readings.*
+The streetlight turns ON only when the configured time condition and low-illumination condition are both satisfied.
+
+*The ADC comparison direction depends on the actual LDR circuit.*
 
 ---
 
-## 📊 Project Features
+## ✨ Key Features
 
-\<p align="center">
-&#x20; \<table>
-&#x20;   \<tr>
-&#x20;     \<td align="center">🕒\<br>\<b>RTC Scheduling\</b>\<br>Automatic time control\</td>
-&#x20;     \<td align="center">🌤️\<br>\<b>LDR Monitoring\</b>\<br>Ambient light detection\</td>
-&#x20;   \</tr>
-&#x20;   \<tr>
-&#x20;     \<td align="center">🔔\<br>\<b>External Interrupt\</b>\<br>Editing mode activation\</td>
-&#x20;     \<td align="center">⌨️\<br>\<b>Keypad Interface\</b>\<br>User configuration\</td>
-&#x20;   \</tr>
-&#x20;   \<tr>
-&#x20;     \<td align="center">🖥️\<br>\<b>LCD Display\</b>\<br>Real-time monitoring\</td>
-&#x20;     \<td align="center">💡\<br>\<b>Automatic Control\</b>\<br>Adaptive streetlighting\</td>
-&#x20;   \</tr>
-&#x20; \</table>
-\</p>
+| Feature | Description |
+|---|---|
+| RTC Scheduling | Automatic time-based streetlight operation |
+| LDR Monitoring | Environmental illumination detection |
+| 10-bit ADC | Analog-to-digital conversion |
+| External Interrupt | Configuration menu activation |
+| Keypad Interface | User-configurable settings |
+| RTC Editing | Individual date and time modification |
+| Time Boundaries | Configurable starting and ending times |
+| LCD Display | Real-time system monitoring |
+| Automatic Control | Time and illumination-based LED control |
+| RTC Backup | Maintains RTC operation using backup supply |
 
 ---
 
@@ -366,12 +373,15 @@ Adaptive-Street-Light-Control-LPC2148/
 │   └── External interrupt source and header files
 │
 ├── IMAGES/
-│   ├── project_banner.png
-│   ├── project_setup.jpg
-│   ├── block_diagram.png
-│   ├── circuit_diagram.png
-│   ├── ldr_circuit.png
-│   └── lcd_output.jpg
+│   ├── hardware_setup.jpg
+│   ├── system_block_diagram.png
+│   ├── rtc_time_display.jpg
+│   ├── rtc_editing_menu.jpg
+│   ├── rtc_time_edit_menu.jpg
+│   ├── hour_editing.jpg
+│   ├── time_boundaries_display.jpg
+│   ├── time_boundaries_edit_menu.jpg
+│   └── ldr_adc_reading.jpg
 │
 ├── KEYPAD/
 │   └── Keypad driver source and header files
@@ -390,20 +400,6 @@ Adaptive-Street-Light-Control-LPC2148/
 
 ---
 
-## 📸 Project Demonstration
-
-\<p align="center">   \<img src="IMAGES/project_setup.jpg" width="700" alt="Complete Project Setup">   \<br>   \<b>Complete Hardware Setup\</b> \</p>
-
-\<p align="center">   \<img src="IMAGES/circuit_diagram.png" width="700" alt="Circuit Diagram">   \<br>   \<b>Hardware Circuit Diagram\</b> \</p>
-
-\<p align="center">
-&#x20; \<img src="IMAGES/lcd_output.jpg" width="550" alt="LCD Working Output">
-&#x20; \<br>
-&#x20; \<b>LCD Working Output\</b>
-\</p>
-
----
-
 ## 🚀 Future Enhancements
 
 - IoT-based remote streetlight monitoring.
@@ -416,12 +412,12 @@ Adaptive-Street-Light-Control-LPC2148/
 
 ## 👨‍💻 Author
 
-\<p align="center">   \<b>G. Jaswanth Kumar\</b>   \<br>   Embedded Systems | ARM7 | LPC2148 | Embedded C   \<br>\<br>   \<i>Designed and implemented as an Embedded Systems project.\</i> \</p>
+**G. Jaswanth Kumar**
+
+Embedded Systems | ARM7 | LPC2148 | Embedded C | Microcontroller Programming
 
 ---
 
-\<p align="center">
-&#x20; ⭐ If you find this project useful, consider giving this repository a star!
-&#x20; \<br>
-&#x20; \<b>Building Intelligent Embedded Systems with ARM7\</b>
-\</p>
+⭐ If you find this project useful, consider giving this repository a star!
+
+**Building Intelligent Embedded Systems with ARM7.**
