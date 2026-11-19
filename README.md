@@ -52,7 +52,6 @@ If either condition is not satisfied, the streetlight remains OFF.
 The following block diagram explains the overall hardware architecture and communication between the different peripherals.
 
 ![Adaptive Street Light System Block Diagram](IMAGES/block diagram.png)
-
 ### System Components
 
 | Component | Function |
