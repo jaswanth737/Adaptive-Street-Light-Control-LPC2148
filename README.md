@@ -221,35 +221,7 @@ The LCD continuously updates RTC information and environmental illumination read
 
 The following image shows the actual LPC2148 development board with the interfacing connections used in this project.
 
-![LPC2148 Hardware Setup](IMAGES/HOUR_EDITING.jpegg)
-
-### 2. RTC Time Display
-
-![RTC Time Display](IMAGES/RTC_TIME_DISPLAYING.jpeg)
-
-### 3. RTC Editing Menu
-
-![RTC Editing Menu](IMAGES/RTC_EDITING.jpeg)
-
-### 4. RTC Time Editing
-
-![RTC Time Edit Menu](IMAGES/RTC_EDIT_TIME_EDIT.jpg)
-
-### 5. Hour Editing
-
-![Hour Editing](IMAGES/HOUR_EDITING.jpg)
-
-### 6. Time Boundaries Display
-
-![Time Boundaries Display](IMAGES/TIME_BOUNDAREIS.jpeg)
-
-### 7. Time Boundaries Editing
-
-![Time Boundaries Editing](IMAGES/TIME_BOUNDARIES_EDITING.jpeg)
-## 🔔 External Interrupt-Driven Configuration
-
-The user can enter editing mode by pressing the external interrupt button connected to P0.1.
-
+![LPC2148 Hardware Setup](IMAGES/all-images.png)
 ### Main Configuration Menu
 
 | Option | Function |
