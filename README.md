@@ -2,8 +2,6 @@
 
 ### Intelligent Streetlight Automation Using LPC2148 ARM7 Microcontroller
 
-![LPC2148 Project](IMAGES/hardware_setup.jpg)
-
 <p align="center">
 
 **LPC2148 | ARM7 | Embedded C | Keil µVision | RTC | ADC**
@@ -53,7 +51,7 @@ If either condition is not satisfied, the streetlight remains OFF.
 
 The following block diagram explains the overall hardware architecture and communication between the different peripherals.
 
-![Adaptive Street Light System Block Diagram](IMAGES/system_block_diagram.png)
+![Adaptive Street Light System Block Diagram](IMAGES/block diagram.png)
 
 ### System Components
 
